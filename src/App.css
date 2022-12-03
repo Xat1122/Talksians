@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.toast-demo button {
+    min-width: 10rem;
+    margin-right: .5rem;
+}
+.InputGroup{
+    display:flex;
+    flex-direction: column;
+  
+    margin-bottom: 20px;
+   
+   
+    
+}
+.InputGroup label{
+    font-size: 15px;
+        font-family: "Montserrat";
+        color:black;
+}
+.UserInputFields{
+    border-radius: 5px;
+    border: 2px #eee solid;
+    padding:15px 10px;
+    font-family: "Montserrat";
+    font-size: 15px;
+    width: 280px;
+    outline: none;
+    
+}
+.UserInputFields:focus{
+    border: 2px solid #A020F0;
+}
+.InputGroupContainer{
+    display:flex;
+    flex-direction: row;
+    gap:40px;
+   
+   
+}
+.InputDropContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #eee ;
+    width: 500px;
+    height: auto;
+    border-style:dashed;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    padding-top: 20px;
+   
+}
+.InputDropContainer p{
+    font-size: 15px;
+    margin-bottom: 5px;
+    font-family: "Montserrat";
+}
+.button-container .SaveButton{
+    background-color: #A020F0;
+   padding-top: 0px !important;
+   padding-bottom: 0px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+    color:white;
+    border: none;
+    font-family: "Montserrat";
+    border-radius: 5px;
+    margin-bottom: 20px;
+    height: 40px;
+}
+.PostComment{
+    margin-top: 20px;
+}
+.PostComment input{
+width: 100%;
+border-radius: 5px;
+padding: 10px;
+font-size: 13px;
+font-weight: normal;
+color: #A9A9A9;
+border:2px solid #A9A9A9;
+outline: none;
+font-family: "Montserrat";
+}
+.PostComment input::placeholder{
+    font-weight: normal;
+color: #A9A9A9;
+font-family: "Montserrat";
+}
+.PostComment input:focus{
+    outline: none;
+    color: #A020F0;
+    border:2px solid #A020F0; 
+}
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked{
+    color: #a020f0 !important;
+}
+.setting-data{
+    top:-50px;
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+   align-items: center;
+   gap:5px;
+   transition:all .1s ease;
+   display: none;
+z-index: 4;
+}
+.setting-data p{
+    margin-bottom: 0px;
+    font-weight: normal;
+    font-size: 13px;
+    cursor:pointer;
+    font-family: "Montserrat";
+    cursor: pointer;
+}
+@media screen and (max-width: 960px) {
+    .toast-demo button {
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+}
+     
