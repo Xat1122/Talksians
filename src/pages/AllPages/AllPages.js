@@ -11,56 +11,22 @@ import {
   createPageFromCreater,
   getAllPages,
   getMyAllPostsFromAction,
-  getSearchPagesAction,
 } from "../../redux/action/Pages";
 import { connect } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
-import { API } from "../../services/api";
 const AllPages = (props) => {
-  const {
-    getAllPagesFromActions,
-    pagesdataFromRedux,
-    pagesLoading,
-    getMyAllPosts,
-    getSearchPages,
-  } = props;
+  const { getAllPagesFromActions, pagesdataFromRedux, pagesLoading,getMyAllPosts } = props;
   const [page, setPage] = useState(0);
   const selector = JSON.parse(localStorage.getItem("User"));
   const [userdata, setuserdata] = useState(selector);
-  const [search, setSearch] = useState("");
-  const [searchdata, setsearchData] = useState("");
-
-  const searchPages = async () => {
-    let r = await API.get(`/page/search?keyword=${search}`);
-    if (r) {
-      setsearchData(r);
-      console.log(r);
-    }
-  };
   useEffect(() => {
-    searchPages();
-    console.log(search);
-  }, [search]);
-
-  useEffect(() => {
-    getAllPages();
+    getAllPagesFromActions().then((res) => {
+      console.log(res.data, "data");
+    });
+    getMyAllPosts(userdata._id).then((res)=>{
+      console.log(res.data,"res.data")
+    })
   }, []);
-
-  const getAllPages = async () => {
-    let r = await API.get(`/page`);
-    if (r) {
-      setsearchData(r);
-    }
-  };
-
-  // useEffect(() => {
-  //   getAllPagesFromActions().then((res) => {
-  //     console.log(res.data, "data");
-  //   });
-  //   getMyAllPosts(userdata._id).then((res) => {
-  //     console.log(res.data, "res.data");
-  //   });
-  // }, []);
 
   console.log(pagesdataFromRedux, "pagesdataFromRedux");
   return (
@@ -71,41 +37,37 @@ const AllPages = (props) => {
           <Sidebar />
         </div>
         <DashboardMidContainer>
-          <PageHeader title="Pages" search={search} setSearch={setSearch} />
+          <PageHeader title="Pages" />
           <div className="flex my-2 bg-white p-1 rounded-lg">
-            <button
-              className={`m-2 ${
-                page === 0 ? "bg-purple-500" : "bg-gray-500"
-              } px-4 py-2 rounded-lg text-white`}
-              onClick={() => setPage(0)}
-            >
+            <button className={`m-2 ${page===0?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(0)}>
               Pages
             </button>
-            <button
-              className={`m-2 ${
-                page === 1 ? "bg-purple-500" : "bg-gray-500"
-              } px-4 py-2 rounded-lg text-white`}
-              onClick={() => setPage(1)}
-            >
+            <button className={`m-2 ${page===1?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(1)}>
               My All Posts in Pages
             </button>
-            <button
-              className={`m-2 ${
-                page === 2 ? "bg-purple-500" : "bg-gray-500"
-              } px-4 py-2 rounded-lg text-white`}
-              onClick={() => setPage(2)}
-            >
+            <button className={`m-2 ${page===2?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(2)}>
               All Pages Posts
             </button>
           </div>
           {page === 0 && (
             <GroupContainer>
-              {searchdata.length > 0 ? (
-                searchdata.map((page) => {
+              {pagesLoading ? (
+                <div className="w-full flex justify-center items-center">
+                  <Spinner
+                    animation="grow"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      backgroundColor: "#A020F0",
+                    }}
+                  />
+                </div>
+              ) : pagesdataFromRedux?.length > 0 ? (
+                pagesdataFromRedux?.map((page) => {
                   return (
                     <PageCard
                       page={page}
-                      getAllPagesFromActions={getAllPages}
+                      getAllPagesFromActions={getAllPagesFromActions}
                     />
                   );
                 })
@@ -142,7 +104,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getAllPagesFromActions: () => dispatch(getAllPages()),
     getMyAllPosts: (id) => dispatch(getMyAllPostsFromAction(id)),
-    getSearchPages: (search) => dispatch(getSearchPagesAction(search)),
   };
 };
 

@@ -3,21 +3,6 @@ import * as ActionTypes from '../action/Pages';
 
 const init = { loading: false, success: false, failed: false, data: null };
 
-
-const getSearchPagesReducer = (state = init, action) => {
-    switch (action.type) {
-        case ActionTypes.GET_SEARCH_PAGES_LOADING:
-            return { ...state, loading: action.data, success: false, failed: false, data: null };
-        case ActionTypes.GET_SEARCH_PAGES_SUCCESS:
-            return { ...state, loading: false, success: true, failed: false, data: action.data };
-        case ActionTypes.GET_SEARCH_PAGES_FAILED:
-            return { ...state, loading: false, success: false, failed: action.data, data: null };
-
-        default:
-            return { ...state };
-    }
-};
-
 const getAllPages = (state = init, action) => {
     switch (action.type) {
         case ActionTypes.GET_ALLPAGES_LOADING:
@@ -80,6 +65,5 @@ export default combineReducers({
     getAllPages,
     getPageByIdFromRedux,
     deletePageByIdFromRedux,
-    getMyAllPostFromRedux,
-    getSearchPagesReducer
+    getMyAllPostFromRedux
 })

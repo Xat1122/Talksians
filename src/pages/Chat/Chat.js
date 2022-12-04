@@ -9,7 +9,6 @@ import {
   arrayUnion,
   doc,
   onSnapshot,
-  serverTimestamp,
   setDoc,
   Timestamp,
   updateDoc,
@@ -47,20 +46,14 @@ const Chat = () => {
         date: Timestamp.now(),
       }),
     });
-    await updateDoc(doc(db, "userChats", userdata._id), {
-      [chatCtx.data.chatId + ".date"]: serverTimestamp(),
-    });
-    await updateDoc(doc(db, "userChats",chatCtx.data?.user.uid), {
-      [chatCtx.data.chatId + ".date"]: serverTimestamp(),
-    });
   };
   const handleKey = (e) => {
     console.log(e.code);
     e.code === "Enter" && handleSend();
   };
   useEffect(() => {
-    // divRef.current?.scrollIntoView();
-    divRef.current?.scrollIntoView({ behavior: "smooth" });
+    divRef.current?.scrollIntoView();
+    // divRef.current?.scrollIntoView({ behavior: "smooth" });
   });
 
   useEffect(() => {
@@ -81,9 +74,9 @@ const Chat = () => {
     <DashboardContainer>
       <Header />
       <DashboardContentContainer>
-        <div className="sidebar-container">
+        {/* <div className="sidebar-container">
           <Sidebar />
-        </div>
+        </div> */}
         <div
           className="w-full flex mt-2"
           style={{ height: "calc(100vh - 150px" }}
@@ -94,14 +87,10 @@ const Chat = () => {
             {chatCtx.data.chatId === "null" ? (
               <p>Please Select a Chat</p>
             ) : (
-              <div className="h-full flex flex-col justify-between">
-                {/* Header  */}
-                <div className="p-2 border-2 border-purple-500 bg-white rounded-lg">
-                  Your connection - {chatCtx.data.user?.displayName}
-                </div>
-                {/* Messages  */}
-                <div className="h-full overflow-y-auto">
+              <div className="h-full">
+                <div className="h-5/6 border overflow-y-auto">
                   <div className="h-full">
+                    <div className="fixed">{chatCtx.data.user?.displayName}</div>
                     <div>
                       {messages?.map((message) => {
                         return (
@@ -111,7 +100,6 @@ const Chat = () => {
                                 ? "justify-end"
                                 : "justify-start"
                             }`}
-                            ref={divRef}
                           >
                             <div className="w-3/5 mr-3">
                               <p
@@ -120,6 +108,7 @@ const Chat = () => {
                                     ? "bg-purple-400"
                                     : "bg-blue-400"
                                 } rounded w-full break-all`}
+                                ref={divRef}
                               >
                                 {message.text}
                               </p>
@@ -129,11 +118,9 @@ const Chat = () => {
                                   "justify-end"
                                 }`}
                               >
-                                <p className="text-xs text-purple-700">
-                                  {moment(message?.Timestamp).format(
-                                    "DD-MM-YYYY"
-                                  )}
-                                </p>
+                                <p className="text-xs">{moment(message?.Timestamp).format(
+                                  "DD-MM-YYYY"
+                                )}</p>
                               </div>
                             </div>
                           </div>
@@ -142,18 +129,16 @@ const Chat = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Search  */}
-                <div className=" border-2 p-2 border-purple-500 my-2 h-20 flex justify-between items-center">
+                <div className="h-1/6 border flex justify-between items-center">
                   <input
                     placeholder="Enter Message to send"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="w-full h-full outline-none"
+                    className="w-full h-full"
                     onKeyDown={handleKey}
                   />
                   <button
-                    className="bg-purple-400 h-full w-3/12 rounded"
+                    className="bg-blue-500 h-full w-3/12"
                     onClick={handleSend}
                   >
                     Send Message

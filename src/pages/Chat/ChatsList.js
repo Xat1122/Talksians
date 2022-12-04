@@ -57,14 +57,14 @@ const ChatsList = () => {
       userdata._id > user.uid
         ? userdata._id + user.uid
         : user.uid + userdata._id;
-    console.log(combinedId, "combinedId");
+        console.log(combinedId,"combinedId")
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       console.log("not exist");
       if (!res.exists()) {
-        await setDoc(doc(db, "chats", combinedId), { messages: [] });
-        console.log("not exist");
-        // handleChangeUser(user)
+          await setDoc(doc(db, "chats", combinedId), { messages: [] });
+          console.log("not exist");
+          // handleChangeUser(user)
 
         // create User Chat
         await updateDoc(doc(db, "userChats", userdata._id), {
@@ -139,7 +139,7 @@ const ChatsList = () => {
           onClick={handleSelect}
         >
           <div className="w-8 h-8 flex justify-center items-center bg-blue-300 rounded-full">
-            {user.displayName?.charAt(0).toUpperCase()}
+          {user.displayName?.charAt(0)}
           </div>
           <span className="ml-2 text-sm">{user.displayName}</span>
         </div>
@@ -148,7 +148,7 @@ const ChatsList = () => {
       {chat &&
         Object.entries(chat)?.length > 0 &&
         Object.entries(chat)
-          ?.sort((a, b) => b[1].date - a[1].date)
+          ?.sort((a, b) => a[1].date - b[1].date)
           .map((chat) => {
             return (
               <div
@@ -156,7 +156,7 @@ const ChatsList = () => {
                 onClick={() => handleChangeUser(chat[1].userInfo)}
               >
                 <div className="w-8 h-8 flex justify-center items-center bg-blue-300 rounded-full">
-                  {chat[1].userInfo.displayName.charAt(0).toUpperCase()}
+                  {chat[1].userInfo.displayName.charAt(0)}
                 </div>
                 <span className="ml-2 text-sm">
                   {chat[1].userInfo.displayName}

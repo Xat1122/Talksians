@@ -74,7 +74,7 @@ const Page = (props) => {
       let r = await API.post(`/page/${id}/post/`, newdata);
       console.log(r);
       setImg("");
-      getPageById(id);
+      getPageById(id)
     }
   };
 
@@ -94,11 +94,7 @@ const Page = (props) => {
       console.log(res.data, "res.data");
     });
   }, []);
-  console.log(
-    getPageData?.creator,
-    userdata._id,
-    "getPageData?.creater === userdata._id"
-  );
+
   console.log(getPageData?.posts, "getPageData?.posts");
   return (
     <DashboardContainer>
@@ -145,125 +141,118 @@ const Page = (props) => {
                   <h1>{getPageData?.title}</h1>
                   <p>{getPageData?.description}</p>
                 </div>
-                {getPageData?.creator === userdata._id && (
-                  <div className="group-button-container">
-                    <button
-                      className="bg-blue-400 rounded-full py-2 px-6 text-white mr-2"
-                      onClick={() => updatePageHandler(getPageData?._id)}
-                    >
-                      Update Page
-                    </button>
-                    <button
-                      className="bg-red-600 rounded-full py-2 px-6 text-white"
-                      onClick={deletePageHandler}
-                    >
-                      Delete Page
-                    </button>
-                  </div>
-                )}
+                <div className="group-button-container">
+                  <button
+                    className="bg-blue-400 rounded-full py-2 px-6 text-white mr-2"
+                    onClick={() => updatePageHandler(getPageData?._id)}
+                  >
+                    Update Page
+                  </button>
+                  <button
+                    className="bg-red-600 rounded-full py-2 px-6 text-white"
+                    onClick={deletePageHandler}
+                  >
+                    Delete Page
+                  </button>
+                </div>
               </div>
             </GroupPageContainer>
           )}
 
-          {getPageData?.creator === userdata._id && (
-            <div className="mt-2">
-              <CreatePostContainer>
-                <div
-                  className="create"
-                  style={{ cursor: "pointer" }}
-                  onClick={AddPost}
-                >
-                  <BorderColorOutlinedIcon style={{ color: "#A020F0" }} />
-                  <p>Create Post</p>
+          <div className="mt-2">
+            <CreatePostContainer>
+              <div
+                className="create"
+                style={{ cursor: "pointer" }}
+                onClick={AddPost}
+              >
+                <BorderColorOutlinedIcon style={{ color: "#A020F0" }} />
+                <p>Create Post</p>
+              </div>
+              <div className="postcontainer">
+                <div className="post-header">
+                  <h5>Title</h5>
+                  <input
+                    placeholder="Enter Post Title"
+                    value={postdata.title}
+                    onChange={(e) =>
+                      setpostdata({ ...postdata, title: e.target.value })
+                    }
+                  />
                 </div>
-                <div className="postcontainer">
-                  <div className="post-header">
-                    <h5>Title</h5>
+                <div className="post-content">
+                  <Avatar
+                    alt="Cindy Baker"
+                    src={userdata.profileImage}
+                    sx={{ cursor: "pointer" }}
+                  />
+                  <textarea
+                    name="desc"
+                    rows="4"
+                    cols="70"
+                    placeholder="Whats on your mind?"
+                    value={postdata.description}
+                    onChange={(e) =>
+                      setpostdata({ ...postdata, description: e.target.value })
+                    }
+                  ></textarea>
+                </div>
+                {img.length > 0 && (
+                  <Image
+                    src={img}
+                    alt=""
+                    width="200px"
+                    height="200px"
+                    style={{ marginTop: "20px" }}
+                  />
+                )}
+                <div className="post-footer">
+                  <div>
+                    <WallpaperIcon sx={{ color: "#10d876" }} />
                     <input
-                      placeholder="Enter Post Title"
-                      value={postdata.title}
-                      onChange={(e) =>
-                        setpostdata({ ...postdata, title: e.target.value })
-                      }
+                      type="file"
+                      onChange={(e) => {
+                        setImg(URL.createObjectURL(e.target.files[0]));
+                        setpostdata({ ...postdata, file: e.target.files[0] });
+                      }}
                     />
+                    <p>Photo/Video</p>
                   </div>
-                  <div className="post-content">
-                    <Avatar
-                      alt="Cindy Baker"
-                      src={userdata.profileImage}
-                      sx={{ cursor: "pointer" }}
-                    />
-                    <textarea
-                      name="desc"
-                      rows="4"
-                      cols="70"
-                      placeholder="Whats on your mind?"
-                      value={postdata.description}
-                      onChange={(e) =>
-                        setpostdata({
-                          ...postdata,
-                          description: e.target.value,
-                        })
-                      }
-                    ></textarea>
-                  </div>
-                  {img.length > 0 && (
-                    <Image
-                      src={img}
-                      alt=""
-                      width="200px"
-                      height="200px"
-                      style={{ marginTop: "20px" }}
-                    />
-                  )}
-                  <div className="post-footer">
-                    <div>
-                      <WallpaperIcon sx={{ color: "#10d876" }} />
-                      <input
-                        type="file"
-                        onChange={(e) => {
-                          setImg(URL.createObjectURL(e.target.files[0]));
-                          setpostdata({ ...postdata, file: e.target.files[0] });
-                        }}
-                      />
-                      <p>Photo/Video</p>
-                    </div>
 
-                    <div>
-                      <MiscellaneousServicesIcon
-                        sx={{ color: "#fe9431" }}
-                        onClick={handleDropDown}
-                      />
-                      <p onClick={() => handleDropDown("click")}>{postType}</p>
-                      <div
-                        className="dropDownbox animate__animated animate__zoomIn"
-                        ref={postRef}
+                  <div>
+                    <MiscellaneousServicesIcon
+                      sx={{ color: "#fe9431" }}
+                      onClick={handleDropDown}
+                    />
+                    <p onClick={() => handleDropDown("click")}>{postType}</p>
+                    <div
+                      className="dropDownbox animate__animated animate__zoomIn"
+                      ref={postRef}
+                    >
+                      <p
+                        className={postType == "Public" ? "active" : ""}
+                        onClick={() => setpostType("Public")}
                       >
-                        <p
-                          className={postType == "Public" ? "active" : ""}
-                          onClick={() => setpostType("Public")}
-                        >
-                          <PublicIcon /> Public
-                        </p>
-                        <p
-                          className={postType == "Private" ? "active" : ""}
-                          onClick={() => setpostType("Private")}
-                        >
-                          <SecurityIcon /> Private
-                        </p>
-                        <p
-                          className={postType == "only_me" ? "active" : ""}
-                          onClick={() => setpostType("only_me")}
-                        >
-                          <EnhancedEncryptionIcon /> only_me
-                        </p>
-                      </div>
+                        <PublicIcon /> Public
+                      </p>
+                      <p
+                        className={postType == "Private" ? "active" : ""}
+                        onClick={() => setpostType("Private")}
+                      >
+                        <SecurityIcon /> Private
+                      </p>
+                      <p
+                        className={postType == "only_me" ? "active" : ""}
+                        onClick={() => setpostType("only_me")}
+                      >
+                        <EnhancedEncryptionIcon /> only_me
+                      </p>
                     </div>
                   </div>
                 </div>
-              </CreatePostContainer>
-            </div>
-          )}
+              </div>
+            </CreatePostContainer>
+          </div>
 
           <div>
             <AllPostContainer>
