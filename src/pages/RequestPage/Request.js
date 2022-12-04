@@ -24,14 +24,18 @@ const Request = () => {
     }
   };
 
-  const acceptFriendRequest = async (senderId) => {
-    let res = await API.get(`user/friend-request/${senderId}/accept`);
+  const acceptFriendRequest = async (id) => {
+    let r = await API.get(`/user/${id}/friend-request`);
+
+    let res = await API.put(`/user/friend-request/${r?.sender}/accept`);
 
     getAllFriendRequests();
   };
 
-  const rejectFriendRequest = async (senderId) => {
-    let res = await API.get(`user/friend-request/${senderId}/reject`);
+  const rejectFriendRequest = async (id) => {
+    let r = await API.get(`/user/${id}/friend-request`);
+
+    let res = await API.put(`/user/friend-request/${r?.sender}/reject`);
 
     getAllFriendRequests();
   };
@@ -45,22 +49,24 @@ const Request = () => {
         </div>
         <DashboardMidContainer>
           <PageHeader title="Friend Request" />
+
+          {allFriendRequests.length == 0 && (
+            <h6 style={{ textAlign: "center", marginTop: 50 }}>
+              No Friend Requests
+            </h6>
+          )}
+
           <RequestContainer>
             {allFriendRequests.map((item, index) => {
               return (
                 <RequestCard
-                  acceptFriendRequest={acceptFriendRequest}
-                  rejectFriendRequest={rejectFriendRequest}
+                  acceptFriendRequest={() => acceptFriendRequest(item?.id)}
+                  rejectFriendRequest={() => rejectFriendRequest(item?.id)}
                   myfriend={item?.isMyFriend}
                   name={item?.name}
                 />
               );
             })}
-
-            <RequestCard myfriend={true} name={"Victor "} />
-            <RequestCard name={"Victor "} />
-            <RequestCard name={"Victor Exrixon"} />
-            <RequestCard name={"Victor Exrixon"} />
           </RequestContainer>
         </DashboardMidContainer>
       </DashboardContentContainer>

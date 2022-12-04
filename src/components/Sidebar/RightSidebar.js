@@ -7,8 +7,11 @@ import UserNotifcations from "../Notification/Notifcations";
 import groupPic from "../../assets/group.jpg";
 import pagePic from "../../assets/page.jpg";
 import { API } from "../../services/api";
+import { ToastContainer, toast } from "react-toastify";
+
 const RightSidebar = () => {
   const [allFriendRequests, setAllFriendRequest] = useState([]);
+  const notify = (Message) => toast(Message);
 
   useEffect(() => {
     getAllFriendRequests();
@@ -24,17 +27,28 @@ const RightSidebar = () => {
     }
   };
 
-  const acceptFriendRequest = async (senderId) => {
-    let res = await API.get(`user/friend-request/${senderId}/accept`);
+  const acceptFriendRequest = async (id) => {
+    console.log("acceptFriendRequest");
+
+    let r = await API.get(`/user/${id}/friend-request`);
+
+    let res = await API.put(`/user/friend-request/${r?.sender}/accept`);
+
+    notify(res?.message);
 
     getAllFriendRequests();
   };
 
-  const rejectFriendRequest = async (senderId) => {
-    let res = await API.get(`user/friend-request/${senderId}/reject`);
+  const rejectFriendRequest = async (id) => {
+    let r = await API.get(`/user/${id}/friend-request`);
+
+    let res = await API.put(`/user/friend-request/${r?.sender}/reject`);
+
+    notify(res?.message);
 
     getAllFriendRequests();
   };
+
   return (
     <>
       <FriendReqeustContainer>
@@ -44,26 +58,21 @@ const RightSidebar = () => {
         </div>
 
         <div className="Avatar-container">
-          {allFriendRequests.map((item, index) => {
-            return (
-              <UserNotifcations
-                type="request"
-                text={item?.name + " send you friend request"}
-                borderBottom="none"
-              />
-            );
-          })}
-
-          <UserNotifcations
-            type="request"
-            text="asad send you friend request"
-            borderBottom="none"
-          />
-          <UserNotifcations
-            type="request"
-            text="mateen send you friend request"
-            borderBottom="none"
-          />
+          {allFriendRequests.length == 0 ? (
+            <h6 style={{ textAlign: "center" }}>No Friend Requests</h6>
+          ) : (
+            allFriendRequests.map((item, index) => {
+              return (
+                <UserNotifcations
+                  type="request"
+                  text={item?.name + " send you friend request"}
+                  borderBottom="none"
+                  acceptFriendRequest={() => acceptFriendRequest(item?.id)}
+                  rejectFriendRequest={() => rejectFriendRequest(item?.id)}
+                />
+              );
+            })
+          )}
         </div>
       </FriendReqeustContainer>
       <FriendReqeustContainer>
@@ -95,6 +104,18 @@ const RightSidebar = () => {
           </div>
         </div>
       </FriendReqeustContainer>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };
