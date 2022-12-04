@@ -11,21 +11,41 @@ import {
   createPageFromCreater,
   getAllPages,
   getMyAllPostsFromAction,
+  getSearchPagesAction,
 } from "../../redux/action/Pages";
 import { connect } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
+import { PageHeadeContainer } from "../../components/PageHeader/PageHeader.style";
+import { SearchContainer } from "../../components/Header/Header.style";
+import SearchIcon from '@mui/icons-material/Search';
+
 const AllPages = (props) => {
-  const { getAllPagesFromActions, pagesdataFromRedux, pagesLoading,getMyAllPosts } = props;
+  const {
+    getAllPagesFromActions,
+    pagesdataFromRedux,
+    pagesLoading,
+    getMyAllPosts,
+    getSearchPages,
+    searchpagesdataFromRedux,
+    searchpagesLoading
+  } = props;
   const [page, setPage] = useState(0);
   const selector = JSON.parse(localStorage.getItem("User"));
   const [userdata, setuserdata] = useState(selector);
+  const [search, setSearch] = useState("");
+  const searchPages = (e) => {
+    setSearch(e.target.value)
+    getSearchPages(e.target.value)
+  };
+
+  console.log(searchpagesdataFromRedux,"searchpagesdataFromRedux")
   useEffect(() => {
     getAllPagesFromActions().then((res) => {
       console.log(res.data, "data");
     });
-    getMyAllPosts(userdata._id).then((res)=>{
-      console.log(res.data,"res.data")
-    })
+    getMyAllPosts(userdata._id).then((res) => {
+      console.log(res.data, "res.data");
+    });
   }, []);
 
   console.log(pagesdataFromRedux, "pagesdataFromRedux");
@@ -37,15 +57,46 @@ const AllPages = (props) => {
           <Sidebar />
         </div>
         <DashboardMidContainer>
-          <PageHeader title="Pages" />
+          {/* Search Page */}
+          <PageHeadeContainer>
+            <h1>Pages</h1>
+            {/* <SearchContainer> */}
+              <div className="flex border border-red-500 bg-gray-200 px-4 p-3 rounded-full">
+              <input
+                placeholder="Search "
+                value={search}
+                onChange={searchPages}
+                className="bg-transparent w-full outline-none"
+              />
+              <SearchIcon />
+              </div>
+            {/* </SearchContainer> */}
+          </PageHeadeContainer>
+
+          {/* <PageHeader title="Pages" search={search} setSearch={setSearch} /> */}
           <div className="flex my-2 bg-white p-1 rounded-lg">
-            <button className={`m-2 ${page===0?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(0)}>
+            <button
+              className={`m-2 ${
+                page === 0 ? "bg-purple-500" : "bg-gray-500"
+              } px-4 py-2 rounded-lg text-white`}
+              onClick={() => setPage(0)}
+            >
               Pages
             </button>
-            <button className={`m-2 ${page===1?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(1)}>
+            <button
+              className={`m-2 ${
+                page === 1 ? "bg-purple-500" : "bg-gray-500"
+              } px-4 py-2 rounded-lg text-white`}
+              onClick={() => setPage(1)}
+            >
               My All Posts in Pages
             </button>
-            <button className={`m-2 ${page===2?'bg-purple-500':'bg-gray-500'} px-4 py-2 rounded-lg text-white`} onClick={()=>setPage(2)}>
+            <button
+              className={`m-2 ${
+                page === 2 ? "bg-purple-500" : "bg-gray-500"
+              } px-4 py-2 rounded-lg text-white`}
+              onClick={() => setPage(2)}
+            >
               All Pages Posts
             </button>
           </div>
@@ -97,6 +148,8 @@ const mapStateToProps = (state) => {
   return {
     pagesdataFromRedux: state.pages.getAllPages.data,
     pagesLoading: state.pages.getAllPages.loading,
+    searchpagesdataFromRedux: state.pages.getSearchPagesReducer.data,
+    searchpagesLoading: state.pages.getSearchPagesReducer.loading,
   };
 };
 
@@ -104,6 +157,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getAllPagesFromActions: () => dispatch(getAllPages()),
     getMyAllPosts: (id) => dispatch(getMyAllPostsFromAction(id)),
+    getSearchPages: (search) => dispatch(getSearchPagesAction(search)),
   };
 };
 
