@@ -139,7 +139,7 @@ const ChatsList = () => {
           onClick={handleSelect}
         >
           <div className="w-8 h-8 flex justify-center items-center bg-blue-300 rounded-full">
-          {user.displayName?.charAt(0)}
+          {user.displayName?.charAt(0).toUpperCase()}
           </div>
           <span className="ml-2 text-sm">{user.displayName}</span>
         </div>
@@ -148,7 +148,7 @@ const ChatsList = () => {
       {chat &&
         Object.entries(chat)?.length > 0 &&
         Object.entries(chat)
-          ?.sort((a, b) => a[1].date - b[1].date)
+          ?.sort((a, b) => b[1].date - a[1].date)
           .map((chat) => {
             return (
               <div
@@ -156,7 +156,7 @@ const ChatsList = () => {
                 onClick={() => handleChangeUser(chat[1].userInfo)}
               >
                 <div className="w-8 h-8 flex justify-center items-center bg-blue-300 rounded-full">
-                  {chat[1].userInfo.displayName.charAt(0)}
+                  {chat[1].userInfo.displayName.charAt(0).toUpperCase()}
                 </div>
                 <span className="ml-2 text-sm">
                   {chat[1].userInfo.displayName}
