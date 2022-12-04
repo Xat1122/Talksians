@@ -9,6 +9,7 @@ import {
   arrayUnion,
   doc,
   onSnapshot,
+  serverTimestamp,
   setDoc,
   Timestamp,
   updateDoc,
@@ -45,6 +46,12 @@ const Chat = () => {
         senderId: userdata._id,
         date: Timestamp.now(),
       }),
+    });
+    await updateDoc(doc(db, "userChats", userdata._id), {
+      [chatCtx.data.chatId + ".date"]: serverTimestamp(),
+    });
+    await updateDoc(doc(db, "userChats",chatCtx.data?.user.uid), {
+      [chatCtx.data.chatId + ".date"]: serverTimestamp(),
     });
   };
   const handleKey = (e) => {
@@ -93,7 +100,7 @@ const Chat = () => {
                   Your connection - {chatCtx.data.user?.displayName}
                 </div>
                 {/* Messages  */}
-                <div className="h-full overflow-y-auto" >
+                <div className="h-full overflow-y-auto">
                   <div className="h-full">
                     <div>
                       {messages?.map((message) => {
@@ -113,7 +120,6 @@ const Chat = () => {
                                     ? "bg-purple-400"
                                     : "bg-blue-400"
                                 } rounded w-full break-all`}
-                               
                               >
                                 {message.text}
                               </p>

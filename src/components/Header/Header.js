@@ -22,11 +22,12 @@ import AutoGraphOutlinedIcon from "@mui/icons-material/AutoGraphOutlined";
 import Avatar from "@mui/material/Avatar";
 import { withTheme } from "styled-components";
 import userImg from "../../../src/assets/user.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import UserNotifcations from "../Notification/Notifcations";
 import { API } from "../../services/api";
 import { useSelector } from "react-redux";
 const Header = (props) => {
+  let navigate=useNavigate()
   const [page, setpage] = useState("Home");
   const [checkuserImg, setCheckUserImg] = useState(userImg);
   const location = useLocation();
@@ -43,6 +44,9 @@ const Header = (props) => {
       height: "30px",
     },
   };
+  const gotoChat=()=>{
+    navigate('/Chat')
+  }
   const handleNotification = (e) => {
     e.preventDefault();
     notificationRef.current.style.display == "block"
@@ -123,7 +127,7 @@ const Header = (props) => {
             }}
           />
         </MyBadge>
-        <MyBadge>
+        <MyBadge onClick={gotoChat}>
           <Roundbox />
           <ChatBubbleOutlineIcon
             style={{

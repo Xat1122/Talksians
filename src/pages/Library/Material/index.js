@@ -6,6 +6,7 @@ import { DashboardContainer, DashboardContentContainer } from "../../../styles";
 import { useNavigate } from "react-router-dom";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import { connect } from "react-redux";
+import fileDownload from "../../../assets/fileDownload.png";
 import {
   deleteMaterialFromCreator,
   DELETE_MATERIAL_SUCCESS,
@@ -33,12 +34,9 @@ const Material = (props) => {
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [semester, setSemester] = useState();
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [file, setFile] = useState(null);
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-  const onDocumentLoadSuccess=({ numPages })=> {
-    setNumPages(numPages);
-  }
+
   console.log(location.state?.material, "location.state.material");
   //toggle Modal
   const toggleModal = () => {
@@ -76,33 +74,31 @@ const Material = (props) => {
     });
   };
   const updateMaterialHandler = () => {
-    if (images.length > 0) {
-      if (files[0] !== null || !files[0] !== undefined) {
-        const formdata = new FormData();
-        formdata.append("image", files[0]);
-        axios
-          .post(`${process.env.REACT_APP_BASE_URL}/user/upload`, formdata)
-          .then((res) => {
-            const payload = {
-              title: title,
-              poster: res.data.url,
-              file: res.data.url,
-              semester: Number(semester),
-              id: location.state?.material._id,
-            };
-            updateMaterialByIdFunc(payload).then((res) => {
-              if (res.type === UPDATE_MATERIAL_SUCCESS) {
-                setModal(false);
-                navigate("/Library");
-              } else {
-                setModal(false);
-              }
-            });
-          })
-          .catch((e) => {
-            console.log(e);
+    if (file !== null || !file !== undefined) {
+      const formdata = new FormData();
+      formdata.append("image", file);
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/user/upload`, formdata)
+        .then((res) => {
+          const payload = {
+            title: title,
+            poster: res.data.url,
+            file: res.data.url,
+            semester: Number(semester),
+            id: location.state?.material._id,
+          };
+          updateMaterialByIdFunc(payload).then((res) => {
+            if (res.type === UPDATE_MATERIAL_SUCCESS) {
+              setModal(false);
+              navigate("/Library");
+            } else {
+              setModal(false);
+            }
           });
-      }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     } else {
       const payload = {
         title: title,
@@ -115,11 +111,17 @@ const Material = (props) => {
         if (res.type === UPDATE_MATERIAL_SUCCESS) {
           setModal(false);
           navigate("/Library");
+          setFile(null);
         } else {
           setModal(false);
+          setFile(null);
         }
       });
     }
+  };
+  const handleFileInput = (e) => {
+    // handle validations
+    setFile(e.target.files[0]);
   };
   const downloadImage = () => {
     console.log(
@@ -145,7 +147,7 @@ const Material = (props) => {
         <div className="border bg-white hover:bg-red-500 m-2 shadow-xl p-3 w-full rounded-xl">
           {modal && (
             <Modal active={modal} toggleModal={toggleModal}>
-              <p className="text-xl text-gray-600">Add New material</p>
+              <p className="text-xl text-gray-600">Update material</p>
               <input
                 placeholder="Enter Title of the material"
                 className="border rounded font-thin text-sm p-2 w-full"
@@ -158,14 +160,26 @@ const Material = (props) => {
                 value={semester}
                 onChange={(e) => setSemester(e.target.value)}
               />
-              <div
+              <input type="file" onChange={handleFileInput} />
+
+              {file === null && (
+                <div className="flex justify-center w-full">
+                  <div
+                    className="w-72 h-56 flex mt-4"
+                  >
+                    <img
+                      src={fileDownload}
+                      className="shadow-lg rounded-xl object-cover cursor-pointer"
+                    />
+                  </div>
+                </div>
+              )}
+              {/* <div
                 className="w-full flex flex-col items-center justify-center"
                 {...getRootProps()}
                 style={{ width: "100%" }}
               >
-                <p className="mt-2">
-                  Select a background image for the material
-                </p>
+                <p className="mt-2">Select a file</p>
                 <CloudDownloadOutlinedIcon
                   style={{ width: "80px", height: "80px" }}
                 />
@@ -182,7 +196,7 @@ const Material = (props) => {
                     />
                   </div>
                 )}
-              </div>
+              </div> */}
               <Button
                 variant="secondary"
                 onClick={updateMaterialHandler}
@@ -217,33 +231,50 @@ const Material = (props) => {
               />
             </svg>
           </div>
-          <div>
-            <p className="text-2xl text-purple-500 text-center mt-4">
-              Material : {location.state?.material.title}
-            </p>
-            <p className="text-2xl text-purple-500 text-center mt-4">
-              Material : {location.state?.material.semester}
-            </p>
-            <Button variant="secondary" onClick={toggleModal}>
-              Update Material
-            </Button>
-            <Button
-              variant="danger"
-              className="ml-2"
-              onClick={deleteMaterialHandler}
-            >
-              Delete Material
-            </Button>
+          <div className="flex justify-between mt-4">
+            <div>
+              <p className="text-xl text-purple-500">
+                Material Name : {location.state?.material.title}
+              </p>
+              <p className="text-xl text-purple-500">
+                Semester : {location.state?.material.semester}
+              </p>
+            </div>
+            <div>
+              <Button variant="secondary" onClick={toggleModal}>
+                Update Material
+              </Button>
+              <Button
+                variant="danger"
+                className="ml-2"
+                onClick={deleteMaterialHandler}
+              >
+                Delete Material
+              </Button>
+            </div>
           </div>
-          <a href={location.state?.material.file}>pdf</a>
-          <button
+          <div
+            className="w-72 h-56 flex mt-4"
             onClick={() => {
               saveAs(location.state?.material.file, "myfile.pdf");
             }}
           >
-            download
-          </button>
-            
+            <img
+              src={fileDownload}
+              className="shadow-lg rounded-xl object-cover cursor-pointer"
+            />
+          </div>
+          {/* <a href={location.state?.material.file}>pdf</a> */}
+          <Button
+            className="mt-4"
+            variant="primary"
+            onClick={() => {
+              saveAs(location.state?.material.file, "myfile.pdf");
+            }}
+          >
+            Download Material
+          </Button>
+
           {/* <div>
             <div>
               <img

@@ -57,14 +57,14 @@ const ChatsList = () => {
       userdata._id > user.uid
         ? userdata._id + user.uid
         : user.uid + userdata._id;
-        console.log(combinedId,"combinedId")
+    console.log(combinedId, "combinedId");
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       console.log("not exist");
       if (!res.exists()) {
-          await setDoc(doc(db, "chats", combinedId), { messages: [] });
-          console.log("not exist");
-          // handleChangeUser(user)
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+        console.log("not exist");
+        // handleChangeUser(user)
 
         // create User Chat
         await updateDoc(doc(db, "userChats", userdata._id), {
@@ -139,7 +139,7 @@ const ChatsList = () => {
           onClick={handleSelect}
         >
           <div className="w-8 h-8 flex justify-center items-center bg-blue-300 rounded-full">
-          {user.displayName?.charAt(0).toUpperCase()}
+            {user.displayName?.charAt(0).toUpperCase()}
           </div>
           <span className="ml-2 text-sm">{user.displayName}</span>
         </div>
