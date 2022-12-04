@@ -97,8 +97,8 @@ const GroupPageCard = ({ page,getAllPagesFromActions }) => {
           />
         </div>
         <div className="group-content">
-          <h1>{page.title}</h1>
-          <p>{page.description}</p>
+          <h1 className="break-all">{page.title}</h1>
+          <p>{page.description.substring(0,25)}</p>
         </div>
         <div className="group-button-container">
           <button
