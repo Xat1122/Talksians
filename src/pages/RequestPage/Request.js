@@ -1,44 +1,71 @@
-import React,{useState,useEffect,useRef} from 'react'
-import Header from '../../components/Header/Header'
-import {DashboardContainer,DashboardContentContainer} from "../../styles"
-import Sidebar from '../../components/Sidebar/Sidebar'
-import {DashboardMidContainer} from "../UserDashboard/UserDashboard.style"
-import PageHeader from "../../components/PageHeader/PageHeader"
-import {RequestContainer} from "./Request.style"
-import RequestCard from "../../components/RequestCard/RequestCard"
-import {API} from "../../services/api"
+import React, { useState, useEffect, useRef } from "react";
+import Header from "../../components/Header/Header";
+import { DashboardContainer, DashboardContentContainer } from "../../styles";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { DashboardMidContainer } from "../UserDashboard/UserDashboard.style";
+import PageHeader from "../../components/PageHeader/PageHeader";
+import { RequestContainer } from "./Request.style";
+import RequestCard from "../../components/RequestCard/RequestCard";
+import { API } from "../../services/api";
 const Request = () => {
-  const [request,setRequest]=useState([])
-  useEffect(()=>{
-    const getAllRequest=async()=>{
-      let r=await API.get('/user/all-friend-requests')
-      console.log(r)
+  const [allFriendRequests, setAllFriendRequest] = useState([]);
+
+  useEffect(() => {
+    getAllFriendRequests();
+  }, []);
+
+  const getAllFriendRequests = async () => {
+    let res = await API.get(`/user/all-friend-requests`);
+
+    if (res.error) {
+      setAllFriendRequest([]);
+    } else {
+      setAllFriendRequest(res);
     }
-    getAllRequest();
-  },[])
+  };
+
+  const acceptFriendRequest = async (senderId) => {
+    let res = await API.get(`user/friend-request/${senderId}/accept`);
+
+    getAllFriendRequests();
+  };
+
+  const rejectFriendRequest = async (senderId) => {
+    let res = await API.get(`user/friend-request/${senderId}/reject`);
+
+    getAllFriendRequests();
+  };
+
   return (
     <DashboardContainer>
-<Header/>
-<DashboardContentContainer>
-<div className='sidebar-container'>
-        <Sidebar/>
+      <Header />
+      <DashboardContentContainer>
+        <div className="sidebar-container">
+          <Sidebar />
         </div>
         <DashboardMidContainer>
-        <PageHeader title="Friend Request"/>
-        <RequestContainer>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-<RequestCard/>
-        </RequestContainer>
-          </DashboardMidContainer>
-</DashboardContentContainer>
-      </DashboardContainer>
-  )
-}
+          <PageHeader title="Friend Request" />
+          <RequestContainer>
+            {allFriendRequests.map((item, index) => {
+              return (
+                <RequestCard
+                  acceptFriendRequest={acceptFriendRequest}
+                  rejectFriendRequest={rejectFriendRequest}
+                  myfriend={item?.isMyFriend}
+                  name={item?.name}
+                />
+              );
+            })}
 
-export default Request
+            <RequestCard myfriend={true} name={"Victor "} />
+            <RequestCard name={"Victor "} />
+            <RequestCard name={"Victor Exrixon"} />
+            <RequestCard name={"Victor Exrixon"} />
+          </RequestContainer>
+        </DashboardMidContainer>
+      </DashboardContentContainer>
+    </DashboardContainer>
+  );
+};
+
+export default Request;

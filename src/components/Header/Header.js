@@ -9,6 +9,7 @@ import {
   HeaderMiddle,
   IconOuterContainer,
   NotificationContainer,
+  SearchBarContainer,
 } from "./Header.style";
 import MyLogo from "../Logo/Logo";
 import SearchIcon from "@mui/icons-material/Search";
@@ -26,12 +27,19 @@ import { useLocation } from "react-router-dom";
 import UserNotifcations from "../Notification/Notifcations";
 import { API } from "../../services/api";
 import { useSelector } from "react-redux";
+
+import { useNavigate } from "react-router-dom";
 const Header = (props) => {
   const [page, setpage] = useState("Home");
   const [checkuserImg, setCheckUserImg] = useState(userImg);
   const location = useLocation();
   const notificationRef = useRef(null);
   const selector = JSON.parse(localStorage.getItem("User"));
+
+  const [searchResults, setSearchResults] = useState([]);
+  const [wordEntered, setWordEntered] = useState("");
+
+  const navigate = useNavigate();
 
   const ActiveStyle = {
     style: { color: props.theme.colors.light, width: "30px", height: "30px" },
@@ -54,9 +62,9 @@ const Header = (props) => {
   }, []);
   const getMyProfile = async () => {
     let r = await API.get("/user/profile");
-    console.log(r,"rrrrr");
+    console.log(r);
     if (r) {
-      if (r?.profileImage?.length > 0) {
+      if (r.profileImage.length > 0) {
         setCheckUserImg(r.profileImage);
       }
     }
@@ -64,91 +72,139 @@ const Header = (props) => {
   useEffect(() => {
     getMyProfile();
   }, []);
-  return (
-    <HeaderContainer>
-      <NotificationContainer
-        ref={notificationRef}
-        className="animate__animated animate__zoomIn"
-      >
-        <UserNotifcations
-          type="request"
-          text="shehryar send you friend request"
-        />
-        <UserNotifcations
-          type="pagelike"
-          text="asad invited you to like this page"
-        />
-        <UserNotifcations
-          type="request"
-          text="mateen send you friend request"
-        />
-        <UserNotifcations
-          type="pagelike"
-          text="rehan invited you to like this page"
-        />
-      </NotificationContainer>
-      <MyLogo />
-      <HeaderMiddle>
-        <SearchContainer>
-          <SearchIcon sx={{ color: "#ced4da" }} />
-          <SearchInput type="text" placeholder="Search" />
-        </SearchContainer>
-        <IconOuterContainer active={page == "Home" ? true : false}>
-          <HomeOutlinedIcon
-            style={page == "Home" ? ActiveStyle.style : NonActiveStyle.style}
-          />
-        </IconOuterContainer>
-        <IconOuterContainer active={page == "Userprofile" ? true : false}>
-          <PersonOutlineOutlinedIcon
-            style={
-              page == "Userprofile" ? ActiveStyle.style : NonActiveStyle.style
-            }
-          />
-        </IconOuterContainer>
-        <IconOuterContainer active={page == "Groups" ? true : false}>
-          <AutoGraphOutlinedIcon
-            style={page == "Groups" ? ActiveStyle.style : NonActiveStyle.style}
-          />
-        </IconOuterContainer>
-      </HeaderMiddle>
 
-      <IconContainer>
-        <MyBadge onClick={handleNotification}>
-          <Roundbox />
-          <NotificationsNoneIcon
-            style={{
-              color: props.theme.colors.light,
-              width: "33px",
-              height: "33px",
-            }}
+  const handleFilter = async (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+
+    let r = await API.get("/user/search-user?name=" + searchWord);
+    console.log(r);
+
+    if (Array.isArray(r)) {
+      setSearchResults(r);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  return (
+    <>
+      <HeaderContainer>
+        <NotificationContainer
+          ref={notificationRef}
+          className="animate__animated animate__zoomIn"
+        >
+          <UserNotifcations
+            type="request"
+            text="shehryar send you friend request"
           />
-        </MyBadge>
-        <MyBadge>
-          <Roundbox />
-          <ChatBubbleOutlineIcon
-            style={{
-              color: props.theme.colors.light,
-              width: "30px",
-              height: "30px",
-            }}
+          <UserNotifcations
+            type="pagelike"
+            text="asad invited you to like this page"
           />
-        </MyBadge>
-        <MyBadge>
-          <SettingsIcon
-            style={{
-              color: props.theme.colors.light,
-              width: "32px",
-              height: "32px",
-            }}
+          <UserNotifcations
+            type="request"
+            text="mateen send you friend request"
           />
-        </MyBadge>
-        <Avatar
-          alt="Cindy Baker"
-          src={checkuserImg}
-          sx={{ cursor: "pointer" }}
-        />
-      </IconContainer>
-    </HeaderContainer>
+          <UserNotifcations
+            type="pagelike"
+            text="rehan invited you to like this page"
+          />
+        </NotificationContainer>
+        <MyLogo />
+        <HeaderMiddle>
+          <div>
+            <SearchContainer>
+              <SearchIcon sx={{ color: "#ced4da" }} />
+              <SearchInput
+                type="text"
+                placeholder="Search"
+                value={wordEntered}
+                onChange={handleFilter}
+              />
+            </SearchContainer>
+            {searchResults.length != 0 && (
+              // <SearchBarContainer>
+              <div
+                className="mt-1 p-2 bg-white shadow-lg rounded-bl rounded-br  overflow-y-auto"
+                style={{ zIndex: 100000, height: 200 }}
+              >
+                {searchResults.map((item, key) => {
+                  return (
+                    <a
+                      onClick={() => {
+                        navigate(`/UserProfile/${item?._id}`);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <p>{item?.firstName + " " + item?.lastName} </p>
+                    </a>
+                  );
+                })}
+              </div>
+              // </SearchBarContainer>
+            )}
+          </div>
+
+          <IconOuterContainer active={page == "Home" ? true : false}>
+            <HomeOutlinedIcon
+              style={page == "Home" ? ActiveStyle.style : NonActiveStyle.style}
+            />
+          </IconOuterContainer>
+          <IconOuterContainer active={page == "Userprofile" ? true : false}>
+            <PersonOutlineOutlinedIcon
+              style={
+                page == "Userprofile" ? ActiveStyle.style : NonActiveStyle.style
+              }
+            />
+          </IconOuterContainer>
+          <IconOuterContainer active={page == "Groups" ? true : false}>
+            <AutoGraphOutlinedIcon
+              style={
+                page == "Groups" ? ActiveStyle.style : NonActiveStyle.style
+              }
+            />
+          </IconOuterContainer>
+        </HeaderMiddle>
+
+        <IconContainer>
+          <MyBadge onClick={handleNotification}>
+            <Roundbox />
+            <NotificationsNoneIcon
+              style={{
+                color: props.theme.colors.light,
+                width: "33px",
+                height: "33px",
+              }}
+            />
+          </MyBadge>
+          <MyBadge>
+            <Roundbox />
+            <ChatBubbleOutlineIcon
+              style={{
+                color: props.theme.colors.light,
+                width: "30px",
+                height: "30px",
+              }}
+            />
+          </MyBadge>
+          <MyBadge>
+            <SettingsIcon
+              style={{
+                color: props.theme.colors.light,
+                width: "32px",
+                height: "32px",
+              }}
+            />
+          </MyBadge>
+          <Avatar
+            alt="Cindy Baker"
+            src={checkuserImg}
+            sx={{ cursor: "pointer" }}
+          />
+        </IconContainer>
+      </HeaderContainer>
+    </>
   );
 };
 

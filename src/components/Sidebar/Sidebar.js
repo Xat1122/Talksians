@@ -35,7 +35,7 @@ const Sidebar = () => {
                 <div className='Avatar-container'>
                     <NotificationAvatar gradient="linear-gradient(to right,#0575e6,#021b79)!important" txt="Timeline" link="/Home" icon={<TvIcon style={{ color: 'white' }} />} />
                     <NotificationAvatar gradient="linear-gradient(to right,#e44d26,#f16529)!important" txt="Pages" link="/allPages" icon={<TokenOutlinedIcon style={{ color: 'white' }} />} />
-                    <NotificationAvatar gradient="linear-gradient(to right,#ee0979,#ff6a00)!important" txt=" Groups" link="/Home" icon={<BoltOutlinedIcon style={{ color: 'white' }} />} />
+                    <NotificationAvatar gradient="linear-gradient(to right,#ee0979,#ff6a00)!important" txt=" Groups" link="/allGroups" icon={<BoltOutlinedIcon style={{ color: 'white' }} />} />
                     <NotificationAvatar gradient="linear-gradient(135deg,#05f,#09f)!important" txt="Profile" link="/MyProfile" icon={<PersonOutlinedIcon style={{ color: 'white' }} />} />
                     <NotificationAvatar gradient="linear-gradient(135deg,#A020F0,#6C0BA9)!important" txt="Notifications" link="/Home" icon={<NotificationsNoneOutlinedIcon style={{ color: 'white' }} />} />
                     <NotificationAvatar gradient="linear-gradient(to right,#ee0979,#ff6a00)!important" txt="Messages" link="/Chat" icon={<ChatBubbleOutlineOutlinedIcon style={{ color: 'white' }} />} />

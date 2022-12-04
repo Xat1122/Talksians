@@ -48,15 +48,14 @@ const theme = {
   },
 };
 
-
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route exact path="/Userprofile" element={<Userprofile />} />
+            <Route exact path="/UserProfile" element={<Userprofile />} />
+            <Route exact path="/UserProfile/:id" element={<Userprofile />} />
             <Route exact path="/Home" element={<Userdashboard />} />
             <Route exact path="/Setting" element={<Setting />} />
             <Route
@@ -90,8 +89,11 @@ function App() {
           <Route exact path="/AccountRecovery" element={<AccountRecovery />} />
           <Route exact path="/admin" element={<Admin />} />
           <Route exact path="/admin-reports" element={<AdminReports />} />
-          <Route exact path="/admin-verifications" element={<AdminVerification />} />
-          
+          <Route
+            exact
+            path="/admin-verifications"
+            element={<AdminVerification />}
+          />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
