@@ -423,7 +423,6 @@ const MyProfile = () => {
                       <Searchbar />
                       <FriendsContainer>
                         {mygroups.map((item, index) => {
-                          console.log(item);
                           return (
                             <GroupPageCard
                               id={item._id}
