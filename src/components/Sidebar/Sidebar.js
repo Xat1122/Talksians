@@ -60,7 +60,7 @@ const Sidebar = () => {
           <NotificationAvatar
             gradient="linear-gradient(to right,#ee0979,#ff6a00)!important"
             txt=" Groups"
-            link="/Home"
+            link="/allGroups"
             icon={<BoltOutlinedIcon style={{ color: "white" }} />}
           />
           <NotificationAvatar

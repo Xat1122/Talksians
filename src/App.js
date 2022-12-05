@@ -60,7 +60,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route exact path="/Userprofile" element={<Userprofile />} />
+            <Route exact path="/UserProfile" element={<Userprofile />} />
+            <Route exact path="/UserProfile/:id" element={<Userprofile />} />
             <Route exact path="/Home" element={<Userdashboard />} />
             <Route exact path="/Setting" element={<Setting />} />
             <Route
