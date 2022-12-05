@@ -33,7 +33,7 @@ import { AllPostContainer } from "../UserDashboard/UserDashboard.style";
 import Photo from "../../components/Photo/Photo";
 import { CreatePostContainer } from "../UserDashboard/UserDashboard.style";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
-import { Image } from "react-bootstrap";
+import { Button, Image } from "react-bootstrap";
 import WallpaperIcon from "@mui/icons-material/Wallpaper";
 import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
 import PublicIcon from "@mui/icons-material/Public";
@@ -53,6 +53,7 @@ import {
 } from "../../styles";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
+const token = localStorage.getItem("Token");
 
 const MyGroupPage = () => {
   const { id } = useParams();
@@ -86,6 +87,7 @@ const MyGroupPage = () => {
   const [postType, setpostType] = useState("Public");
   const postRef = useRef(null);
   const [AllPost, setAllPost] = useState([]);
+  const [allGroupRequest, setAllGroupRequest] = useState([]);
   const notify = (Message) => toast(Message);
 
   const AddPost = async (e) => {
@@ -110,6 +112,21 @@ const MyGroupPage = () => {
       setImg("");
       getGroupData();
     }
+  };
+
+  const getAllRequests = () => {
+    axios(`${process.env.REACT_APP_BASE_URL}/group/${id}/all-request`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        setAllGroupRequest(response.data);
+        console.log(response.data, "Alldata");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
   const getAllPost = async () => {
     console.log("hello");
@@ -226,6 +243,34 @@ const MyGroupPage = () => {
       navigate("/Home");
     }
   };
+  const acceptRequestHandler = (userId) => {
+    axios(`${process.env.REACT_APP_BASE_URL}/group/${id}/${userId}/accept`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        notify("Group request accepted succesfully");
+        getAllRequests();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const rejectRequestHandler = (userId) => {
+    axios(`${process.env.REACT_APP_BASE_URL}/group/${id}/${userId}/reject`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        notify("Group request rejected succesfully");
+        getAllRequests();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   const handleUpdateGroup = async () => {
     let r = await API.put(`/group/${groupdata._id}`, Groupinfo);
     console.log(r);
@@ -236,6 +281,7 @@ const MyGroupPage = () => {
   useEffect(() => {
     getGroupData();
     getAllPost();
+    getAllRequests();
     console.log(groupdata);
   }, [id]);
   return (
@@ -525,7 +571,7 @@ const MyGroupPage = () => {
                         {groupdata.members.map((item, index) => {
                           return (
                             <ProfilePageCard
-                              name={'Hello'}
+                              name={"Hello"}
                               Imgurl={item?.image}
                             />
                           );
@@ -537,7 +583,40 @@ const MyGroupPage = () => {
                     <FriendsCardContainer>
                       <Searchbar />
                       <FriendsContainer>
-                        <GroupPageCard Imgurl={GroupImg2} unfollow={true} />
+                        {allGroupRequest.length > 0 ? (
+                          allGroupRequest.map((req) => {
+                            return (
+                              <div className="bg-gradient-to-r from-purple-400 to-blue-300 p-3 rounded w-96">
+                                <p className="text-white text-xl">
+                                  Group request from {req?.user?.firstName} .Please accept or reject
+                                </p>
+                                <div className="flex justify-between">
+                                  <Button
+                                    variant="primary"
+                                    className="mr-2"
+                                    onClick={acceptRequestHandler.bind(
+                                      this,
+                                      req?.user?._id
+                                    )}
+                                  >
+                                    Accept
+                                  </Button>
+                                  <Button
+                                    variant="danger"
+                                    onClick={rejectRequestHandler.bind(
+                                      this,
+                                      req?.user?._id
+                                    )}
+                                  >
+                                    Reject
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p>No Requests found</p>
+                        )}
                       </FriendsContainer>
                     </FriendsCardContainer>
                   </TabPanel>

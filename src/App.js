@@ -36,9 +36,9 @@ import { useState } from "react";
 import AdminRoute from "./AdminRoute";
 import AdminBlockUnBlockUser from "./Admin/AdminBlockUnBlockUser";
 import AdminBlockUnBlockGroup from "./Admin/AdminBlockUnBlockGroup";
-import  io  from "socket.io-client";
+// import  io  from "socket.io-client";
 
-const socket=io("http://13.37.110.92:8000/")
+// const socket=io("http://13.37.110.92:8000/")
 
 const theme = {
   colors: {

@@ -36,6 +36,8 @@ const AllGroupPage = () => {
   useEffect(() => {
     getAllGroups();
   }, []);
+  console.log(searchdata, "searchdata");
+ 
 
   const getAllGroups = async () => {
     let r = await API.get(`/group`);
@@ -108,6 +110,7 @@ const AllGroupPage = () => {
                             title={item?.title}
                             totalPosts={item?.posts.length}
                             totalMembers={item?.members.length}
+                            totalMembersl={item?.members}
                             isMyGroup={user?._id == item?.creator}
                             type={"group"}
                           />

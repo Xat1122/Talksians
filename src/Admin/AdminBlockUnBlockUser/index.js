@@ -67,7 +67,7 @@ const AdminblockUnblockUser = (props) => {
       if (res.type === BLOCK_USER_SUCCESS) {
         notify("User blocked Succesfully");
         searchUsersFunc();
-      }else{
+      } else {
         notify("Failed to block User");
       }
     });
@@ -79,7 +79,7 @@ const AdminblockUnblockUser = (props) => {
       if (res.type === UNBLOCK_USER_SUCCESS) {
         notify("User unblocked Succesfully");
         searchUsersFunc();
-      }else{
+      } else {
         notify("Failed to unblock User");
       }
     });
