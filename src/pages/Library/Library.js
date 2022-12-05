@@ -32,6 +32,7 @@ const Library = (props) => {
   const navigate = useNavigate();
   const [img, setImage] = useState(null);
   const [modal, setModal] = useState(false);
+  const [requestModal, setRequestModal] = useState(false);
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [saveCatagoryLoading, setSaveCatagoryLoading] = useState(false);
@@ -77,6 +78,10 @@ const Library = (props) => {
   const toggleModal = () => {
     setModal((prev) => !prev);
   };
+  const toggleRequestBecomeTeacherModal = () => {
+    setRequestModal((prev) => !prev);
+  };
+
   // Create Catagory
   const createCatagory = () => {
     setSaveCatagoryLoading(true);
@@ -127,6 +132,7 @@ const Library = (props) => {
       .then((r) => {
         console.log(r.data, "become a teacher");
         notify("You request is sent to admin to become a teacher");
+        setRequestModal(false)
       })
       .catch((e) => {
         console.log(e);
@@ -204,12 +210,41 @@ const Library = (props) => {
               if (userdata.role === "teacher") {
                 toggleModal();
               } else {
-                requestBecomeTeacher();
+                toggleRequestBecomeTeacherModal();
+                // requestBecomeTeacher();
               }
             }}
           >
             Add Catagory
           </Button>
+          {/* Request Modal */}
+          {requestModal && (
+            <Modal
+              active={requestModal}
+              toggleModal={toggleRequestBecomeTeacherModal}
+              size="md"
+            >
+              <p className="text-xl text-gray-600 text-center">
+              You are not teacher. Do you want to become a teacher ?
+              </p>
+              <div className="flex justify-between items-center">
+                <Button
+                  variant="danger"
+                  onClick={toggleRequestBecomeTeacherModal}
+                  className="w-full mt-3 py-2 m-1"
+                >
+                  No
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={requestBecomeTeacher}
+                  className="w-full mt-3 py-2 m-1"
+                >
+                  Yes
+                </Button>
+              </div>
+            </Modal>
+          )}
 
           {/* Modal for Adding new Catagories */}
           {modal && (

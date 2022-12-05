@@ -33,6 +33,7 @@ import AdminVerification from "./Admin/AdminVerification";
 import Page from "./pages/Page/Page";
 import UpdatePage from "./pages/UpdatePage/UpdatePage";
 import { useState } from "react";
+import AdminRoute from "./AdminRoute";
 
 const theme = {
   colors: {
@@ -87,13 +88,15 @@ function App() {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/Signup" element={<Signup />} />
           <Route exact path="/AccountRecovery" element={<AccountRecovery />} />
-          <Route exact path="/admin" element={<Admin />} />
-          <Route exact path="/admin-reports" element={<AdminReports />} />
-          <Route
-            exact
-            path="/admin-verifications"
-            element={<AdminVerification />}
-          />
+          <Route element={<AdminRoute />}>
+            <Route exact path="/admin" element={<Admin />} />
+            <Route exact path="/admin-reports" element={<AdminReports />} />
+            <Route
+              exact
+              path="/admin-verifications"
+              element={<AdminVerification />}
+            />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

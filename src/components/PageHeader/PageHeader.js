@@ -6,8 +6,6 @@ const PageHeader = ({title,search,setSearch}) => {
     
   return (
     <>
-   
-    
     <PageHeadeContainer>
         <h1>{title}</h1>
         <Searchbar search={search} setSearch={setSearch}/>

@@ -23,13 +23,14 @@ import AutoGraphOutlinedIcon from "@mui/icons-material/AutoGraphOutlined";
 import Avatar from "@mui/material/Avatar";
 import { withTheme } from "styled-components";
 import userImg from "../../../src/assets/user.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import UserNotifcations from "../Notification/Notifcations";
 import { API } from "../../services/api";
 import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 const Header = (props) => {
+  let navigate = useNavigate();
   const [page, setpage] = useState("Home");
   const [checkuserImg, setCheckUserImg] = useState(userImg);
   const location = useLocation();
@@ -38,8 +39,6 @@ const Header = (props) => {
 
   const [searchResults, setSearchResults] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
-
-  const navigate = useNavigate();
 
   const ActiveStyle = {
     style: { color: props.theme.colors.light, width: "30px", height: "30px" },
@@ -50,6 +49,9 @@ const Header = (props) => {
       width: "30px",
       height: "30px",
     },
+  };
+  const gotoChat = () => {
+    navigate("/Chat");
   };
   const handleNotification = (e) => {
     e.preventDefault();
@@ -98,10 +100,17 @@ const Header = (props) => {
             type="request"
             text="shehryar send you friend request"
           />
-          <UserNotifcations
-            type="pagelike"
-            text="asad invited you to like this page"
-          />
+
+          <MyBadge onClick={gotoChat}>
+            <Roundbox />
+            <ChatBubbleOutlineIcon
+              style={{
+                color: props.theme.colors.light,
+                width: "30px",
+                height: "30px",
+              }}
+            />
+          </MyBadge>
           <UserNotifcations
             type="request"
             text="mateen send you friend request"

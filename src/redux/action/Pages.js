@@ -20,7 +20,35 @@ export const GET_MY_ALL_POST_SUCCESS = "GET_MY_ALL_POST_SUCCESS";
 export const GET_MY_ALL_POST_FAILED = "GET_MY_ALL_POST_FAILED";
 export const GET_MY_ALL_POST_LOADING = "GET_MY_ALL_POST_LOADING";
 
+export const GET_SEARCH_PAGES_SUCCESS = "GET_SEARCH_PAGES_SUCCESS";
+export const GET_SEARCH_PAGES_FAILED = "GET_SEARCH_PAGES_FAILED";
+export const GET_SEARCH_PAGES_LOADING = "GET_SEARCH_PAGES_LOADING";
+
 const token=localStorage.getItem("Token")
+
+
+export const getSearchPagesAction=(searchText)=>{
+  return (dispatch) => {
+      dispatch({ type: GET_SEARCH_PAGES_LOADING, data: true });
+      return axios
+        .get(`${process.env.REACT_APP_BASE_URL}/page/search?keyword=${searchText}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data, "Response data");
+          dispatch({ type: GET_SEARCH_PAGES_LOADING, data: false });
+          return dispatch({ type: GET_SEARCH_PAGES_SUCCESS, data: res.data });
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+          dispatch({ type: GET_SEARCH_PAGES_LOADING, data: false });
+          return dispatch({ type: GET_SEARCH_PAGES_FAILED, data: false });
+        });
+    };
+}
+
 
 export const getAllPages=()=>{
     return (dispatch) => {
