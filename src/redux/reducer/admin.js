@@ -47,8 +47,69 @@ const acceptRequestReducer = (state = init, action) => {
     }
 };
 
+const blockUserReducer = (state = init, action) => {
+    switch (action.type) {
+        case ActionTypes.BLOCK_USER_LOADING:
+            return { ...state, loading: action.data, success: false, failed: false, data: null };
+        case ActionTypes.BLOCK_USER_SUCCESS:
+            return { ...state, loading: false, success: true, failed: false, data: action.data };
+        case ActionTypes.BLOCK_USER_FAILED:
+            return { ...state, loading: false, success: false, failed: action.data, data: null };
+
+        default:
+            return { ...state };
+    }
+};
+
+const unblockUserReducer = (state = init, action) => {
+    switch (action.type) {
+        case ActionTypes.UNBLOCK_USER_LOADING:
+            return { ...state, loading: action.data, success: false, failed: false, data: null };
+        case ActionTypes.UNBLOCK_USER_SUCCESS:
+            return { ...state, loading: false, success: true, failed: false, data: action.data };
+        case ActionTypes.UNBLOCK_USER_FAILED:
+            return { ...state, loading: false, success: false, failed: action.data, data: null };
+
+        default:
+            return { ...state };
+    }
+};
+
+
+const blockGroupReducer = (state = init, action) => {
+    switch (action.type) {
+        case ActionTypes.BLOCK_GROUP_LOADING:
+            return { ...state, loading: action.data, success: false, failed: false, data: null };
+        case ActionTypes.BLOCK_GROUP_SUCCESS:
+            return { ...state, loading: false, success: true, failed: false, data: action.data };
+        case ActionTypes.BLOCK_GROUP_FAILED:
+            return { ...state, loading: false, success: false, failed: action.data, data: null };
+
+        default:
+            return { ...state };
+    }
+};
+
+const unblockGroupReducer = (state = init, action) => {
+    switch (action.type) {
+        case ActionTypes.UNBLOCK_GROUP_LOADING:
+            return { ...state, loading: action.data, success: false, failed: false, data: null };
+        case ActionTypes.UNBLOCK_GROUP_SUCCESS:
+            return { ...state, loading: false, success: true, failed: false, data: action.data };
+        case ActionTypes.UNBLOCK_GROUP_FAILED:
+            return { ...state, loading: false, success: false, failed: action.data, data: null };
+
+        default:
+            return { ...state };
+    }
+};
+
 export default combineReducers({
     getAllBecomeTeacherRequestsReducer,
     acceptRequestReducer,
-    rejectRequestReducer
+    rejectRequestReducer,
+    unblockUserReducer,
+    blockUserReducer,
+    unblockGroupReducer,
+    blockGroupReducer
 })

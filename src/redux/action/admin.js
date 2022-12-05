@@ -12,6 +12,22 @@ export const ACCEPT_REQUEST_SUCCESS = "ACCEPT_REQUEST_SUCCESS";
 export const ACCEPT_REQUEST_FAILED = "ACCEPT_REQUEST_FAILED";
 export const ACCEPT_REQUEST_LOADING = "ACCEPT_REQUEST_LOADING";
 
+export const BLOCK_USER_SUCCESS = "BLOCK_USER_SUCCESS";
+export const BLOCK_USER_FAILED = "BLOCK_USER_FAILED";
+export const BLOCK_USER_LOADING = "BLOCK_USER_LOADING";
+
+export const UNBLOCK_USER_SUCCESS = "UNBLOCK_USER_SUCCESS";
+export const UNBLOCK_USER_FAILED = "UNBLOCK_USER_FAILED";
+export const UNBLOCK_USER_LOADING = "UNBLOCK_USER_LOADING";
+
+export const BLOCK_GROUP_SUCCESS = "BLOCK_GROUP_SUCCESS";
+export const BLOCK_GROUP_FAILED = "BLOCK_GROUP_FAILED";
+export const BLOCK_GROUP_LOADING = "BLOCK_GROUP_LOADING";
+
+export const UNBLOCK_GROUP_SUCCESS = "UNBLOCK_GROUP_SUCCESS";
+export const UNBLOCK_GROUP_FAILED = "UNBLOCK_GROUP_FAILED";
+export const UNBLOCK_GROUP_LOADING = "UNBLOCK_GROUP_LOADING";
+
 const token=localStorage.getItem("Token")
 
 export const getAllBecomeTeacherRequestsAction = () => {
@@ -77,6 +93,95 @@ export const getAllBecomeTeacherRequestsAction = () => {
           console.log(error, "Error");
           dispatch({ type: REJECT_REQUEST_LOADING, data: false });
           return dispatch({ type: REJECT_REQUEST_FAILED, data: error });
+        });
+    };
+  };
+
+  export const blockUser = (id) => {
+    return (dispatch) => {
+      dispatch({ type: BLOCK_USER_LOADING, data: true });
+      return axios
+        .get(`${process.env.REACT_APP_BASE_URL}/admin/user/${id}/block`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data, "Response data");
+          dispatch({ type: BLOCK_USER_LOADING, data: false });
+          return dispatch({ type: BLOCK_USER_SUCCESS, data: res.data });
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+          dispatch({ type: BLOCK_USER_LOADING, data: false });
+          return dispatch({ type: BLOCK_USER_FAILED, data: error });
+        });
+    };
+  };
+
+  export const unblockUser = (id) => {
+    return (dispatch) => {
+      dispatch({ type: UNBLOCK_USER_LOADING, data: true });
+      return axios
+        .get(`${process.env.REACT_APP_BASE_URL}/admin/user/${id}/unblock`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data, "Response data");
+          dispatch({ type: UNBLOCK_USER_LOADING, data: false });
+          return dispatch({ type: UNBLOCK_USER_SUCCESS, data: res.data });
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+          dispatch({ type: UNBLOCK_USER_LOADING, data: false });
+          return dispatch({ type: UNBLOCK_USER_FAILED, data: error });
+        });
+    };
+  };
+
+
+  export const blockGroup = (id) => {
+    return (dispatch) => {
+      dispatch({ type: BLOCK_GROUP_LOADING, data: true });
+      return axios
+        .get(`${process.env.REACT_APP_BASE_URL}/admin/group/${id}/block`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data, "Response data");
+          dispatch({ type: BLOCK_GROUP_LOADING, data: false });
+          return dispatch({ type: BLOCK_GROUP_SUCCESS, data: res.data });
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+          dispatch({ type: BLOCK_GROUP_LOADING, data: false });
+          return dispatch({ type: BLOCK_GROUP_FAILED, data: error });
+        });
+    };
+  };
+
+  export const unblockGroup = (id) => {
+    return (dispatch) => {
+      dispatch({ type: UNBLOCK_GROUP_LOADING, data: true });
+      return axios
+        .get(`${process.env.REACT_APP_BASE_URL}/admin/group/${id}/unblock`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data, "Response data");
+          dispatch({ type: UNBLOCK_GROUP_LOADING, data: false });
+          return dispatch({ type: UNBLOCK_GROUP_SUCCESS, data: res.data });
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+          dispatch({ type: UNBLOCK_GROUP_LOADING, data: false });
+          return dispatch({ type: UNBLOCK_GROUP_FAILED, data: error });
         });
     };
   };

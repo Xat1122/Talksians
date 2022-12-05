@@ -34,6 +34,11 @@ import Page from "./pages/Page/Page";
 import UpdatePage from "./pages/UpdatePage/UpdatePage";
 import { useState } from "react";
 import AdminRoute from "./AdminRoute";
+import AdminBlockUnBlockUser from "./Admin/AdminBlockUnBlockUser";
+import AdminBlockUnBlockGroup from "./Admin/AdminBlockUnBlockGroup";
+import  io  from "socket.io-client";
+
+const socket=io("http://13.37.110.92:8000/")
 
 const theme = {
   colors: {
@@ -90,6 +95,8 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route exact path="/admin" element={<Admin />} />
             <Route exact path="/admin-reports" element={<AdminReports />} />
+            <Route exact path="/admin-block-unblock" element={<AdminBlockUnBlockUser />} />
+            <Route exact path="/group-block-unblock" element={<AdminBlockUnBlockGroup />} />
             <Route
               exact
               path="/admin-verifications"
