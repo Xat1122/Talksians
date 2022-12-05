@@ -28,7 +28,6 @@ import UserNotifcations from "../Notification/Notifcations";
 import { API } from "../../services/api";
 import { useSelector } from "react-redux";
 
-import { useNavigate } from "react-router-dom";
 const Header = (props) => {
   let navigate = useNavigate();
   const [page, setpage] = useState("Home");
